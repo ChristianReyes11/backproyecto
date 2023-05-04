@@ -13,7 +13,7 @@ app.use(bodyParser.json());
  * route homepage
  */
 app.get("/", (req, res) => {
-  res.send("**Bienvenido a CBIX**");
+  res.send("**Bienvenido al API de CBIX**");
 });
 
 // Conexión a la base de datos

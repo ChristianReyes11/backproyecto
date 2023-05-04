@@ -8,7 +8,7 @@ const {
 } = require('../controllers/usuariosController');
 
 // Endpoint para crear un usuario
-router.post('/usuarios', crearUsuario);
+router.post('usuario', crearUsuario);
 
 // Endpoint para obtener todos los usuarios
 router.get('/usuarios', obtenerUsuarios);
