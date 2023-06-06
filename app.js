@@ -1,7 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const sequelize = require('./Api/config/db');
-const routesPuerta = require('./Api/routes/luzRoutes');
+const routesPuerta = require('./Api/routes/puertaRoutes');
 
 
 const app = express();
