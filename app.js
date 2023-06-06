@@ -1,7 +1,8 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const sequelize = require('./Api/config/db');
-const routes = require('./Api/routes/luzRoutes');
+const routesPuerta = require('./Api/routes/luzRoutes');
+
 
 const app = express();
 
@@ -27,7 +28,7 @@ app.get("/", (req, res) => {
 //   });
 
 // Carga de rutas de la API
-app.use('/api', routes);
+app.use('/api', routesPuerta);
 
 // Iniciar servidor
 app.listen(3000, () => {
