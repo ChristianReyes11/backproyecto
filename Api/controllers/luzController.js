@@ -1,30 +1,28 @@
 const Luz = require('../models/luz');
-const db = require('../models/luz');
 
 // Obtener todas las luces
 const getLuces = async (req, res) => {
   try {
-    const luces = await db.Luz.findAll();
-    res.status(200).json(luces);
+    const luces = await Luz.find();
+    res.status(200).json({luces});
   } catch (err) {
     console.log(err);
-    res.status(500).json({ message: 'Error al obtener las luces' });
+    res.status(500).json({ error: 'Error al obtener las luces' });
   }
 };
 
 // Obtener una luz por su ID
 const getLuzById = async (req, res) => {
-  const { id } = req.params;
   try {
-    const luz = await db.Luz.findByPk(id);
-    if (luz) {
-      res.status(200).json(luz);
-    } else {
-      res.status(404).json({ message: 'Luz no encontrada' });
+    const { id } = req.params;
+    const luz = await Luz.findById(id);
+    if (!luz) {
+      return res.status(404).json({ error: 'Luz no encontrada'});
     }
+    res.status(200).json({luz})
   } catch (err) {
-    console.log(err);
-    res.status(500).json({ message: 'Error al obtener la luz' });
+    console.error(err);
+    res.status(500).json({ error: 'Error al obtener la luz' });
   }
 };
 
@@ -44,41 +42,36 @@ const createLuz = async (req, res) => {
 
 // Actualizar una luz existente
 const updateLuz = async (req, res) => {
-  const { id } = req.params;
-  const { nombre, estado, brillo, programar, color } = req.body;
   try {
-    const luz = await db.Luz.findByPk(id);
-    if (luz) {
-      luz.nombre = nombre;
-      luz.estado = estado;
-      luz.brillo = brillo;
-      luz.programar = programar;
-      luz.color = color;
-      await luz.save();
-      res.status(200).json(luz);
-    } else {
-      res.status(404).json({ message: 'Luz no encontrada' });
-    }
+    const { id } = req.params;
+    const { nombre, estado, brillo, programar, color } = req.body;
+    const luz = await Luz.findByIdAndUpdate(
+      id,
+      { nombre, estado, brillo, programar, color },
+      { new: true }
+    );
+    if (!luz) {
+      return res.status(404).json( {error: 'Luz no encontrada'});
+    } 
+    res.status(200).json({ luz });
   } catch (err) {
-    console.log(err);
-    res.status(500).json({ message: 'Error al actualizar la luz' });
+    console.error(err);
+    res.status(500).json({ error: 'Error al actualizar la luz' });
   }
 };
 
 // Eliminar una luz existente
 const deleteLuz = async (req, res) => {
-  const { id } = req.params;
   try {
-    const luz = await db.Luz.findByPk(id);
-    if (luz) {
-      await luz.destroy();
-      res.status(204).send();
-    } else {
-      res.status(404).json({ message: 'Luz no encontrada' });
-    }
+    const { id } = req.params;
+    const luz = await Luz.findByIdAndDelete(id);
+    if (!luz) {
+      return res.status(404).json({ error: 'Luz no encontrada' });
+    } 
+    res.json({ message: 'Puerta eliminada correctamente' });
   } catch (err) {
-    console.log(err);
-    res.status(500).json({ message: 'Error al eliminar la luz' });
+    console.error(err);
+    res.status(500).json({ error: 'Error al eliminar la luz' });
   }
 };
 

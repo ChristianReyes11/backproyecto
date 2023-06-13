@@ -4,7 +4,7 @@ const Puerta = require('../models/puerta');
 exports.getPuertas = async (req, res) => {
   try {
     const puertas = await Puerta.find();
-    res.json(puertas);
+    res.status(200).json(puertas);
   } catch (error) {
     res.status(500).json({ error: 'Error al obtener las puertas' });
   }
@@ -32,8 +32,9 @@ exports.getPuertaById = async (req, res) => {
     if (!puerta) {
       return res.status(404).json({ error: 'Puerta no encontrada' });
     }
-    res.json(puerta);
+    res.status(200).json({puerta});
   } catch (error) {
+    console.error(error)
     res.status(500).json({ error: 'Error al obtener la puerta' });
   }
 };
@@ -51,8 +52,9 @@ exports.updatePuerta = async (req, res) => {
     if (!puerta) {
       return res.status(404).json({ error: 'Puerta no encontrada' });
     }
-    res.json(puerta);
+    res.status(200).json({puerta});
   } catch (error) {
+    console.error(error)
     res.status(500).json({ error: 'Error al actualizar la puerta' });
   }
 };
@@ -67,6 +69,7 @@ exports.deletePuerta = async (req, res) => {
     }
     res.json({ message: 'Puerta eliminada correctamente' });
   } catch (error) {
+    console.error(error)
     res.status(500).json({ error: 'Error al eliminar la puerta' });
   }
 };

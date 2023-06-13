@@ -34,6 +34,8 @@ app.use('/puertas', puertaRoutes);
 const luzRoutes = require('./Api/routes/luzRoutes');
 app.use('/luces', luzRoutes);
 
+const usuarioRoutes = require('./Api/routes/usuarioRoutes');
+app.use('/usuarios', usuarioRoutes);
 // Otros enrutadores y configuraciones
 // ...
 

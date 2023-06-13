@@ -1,109 +1,98 @@
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
-const { Usuario } = require('../models');
+const Usuario = require('../models/usuario');
 
+// Controlador para crear un nuevo usuario
 const crearUsuario = async (req, res) => {
   try {
-    const { nombre, correo, contrasena } = req.body;
+    // Obtener los datos del usuario del cuerpo de la solicitud
+    const { nombre, correo, contraseña } = req.body;
 
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(contrasena, salt);
+    // Verificar si el correo electrónico ya está registrado
+    const usuarioExistente = await Usuario.findOne({ correo });
+    if (usuarioExistente) {
+      return res.status(400).json({ error: 'El correo electrónico ya está registrado' });
+    }
 
-    const usuario = await Usuario.create({
+    // Crear una instancia del modelo Usuario con los datos proporcionados
+    const nuevoUsuario = new Usuario({
       nombre,
       correo,
-      contrasena: hashedPassword,
+      contraseña,
     });
 
-    const token = jwt.sign({ id: usuario.id }, process.env.JWT_SECRET);
+    // Guardar el nuevo usuario en la base de datos
+    await nuevoUsuario.save();
 
-    res.status(201).json({
-      usuario,
-      token,
-    });
+    // Enviar la respuesta con el usuario creado
+    res.status(201).json({ usuario: nuevoUsuario });
   } catch (error) {
-    console.log(error);
-    res.status(500).json({
-      message: 'Error al crear el usuario',
-    });
+    // Manejo de errores
+    console.error(error);
+    res.status(500).json({ error: 'Error al crear el usuario' });
   }
 };
 
+// Controlador para obtener todos los usuarios
 const obtenerUsuarios = async (req, res) => {
   try {
-    const usuarios = await Usuario.findAll({
-      attributes: { exclude: ['contrasena'] },
-    });
+    // Obtener todos los usuarios de la base de datos
+    const usuarios = await Usuario.find();
 
+    // Enviar la respuesta con los usuarios encontrados
     res.status(200).json({ usuarios });
   } catch (error) {
-    console.log(error);
-    res.status(500).json({
-      message: 'Error al obtener los usuarios',
-    });
+    // Manejo de errores
+    console.error(error);
+    res.status(500).json({ error: 'Error al obtener los usuarios' });
   }
 };
 
+// Controlador para obtener un usuario por su ID
 const obtenerUsuarioPorId = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const usuario = await Usuario.findOne({
-      where: { id },
-      attributes: { exclude: ['contrasena'] },
-    });
+    // Buscar el usuario por su ID en la base de datos
+    const usuario = await Usuario.findById(id);
 
+    // Verificar si se encontró un usuario con el ID proporcionado
     if (!usuario) {
-      return res.status(404).json({
-        message: 'Usuario no encontrado',
-      });
+      return res.status(404).json({ error: 'Usuario no encontrado' });
     }
 
+    // Enviar la respuesta con el usuario encontrado
     res.status(200).json({ usuario });
   } catch (error) {
-    console.log(error);
-    res.status(500).json({
-      message: 'Error al obtener el usuario',
-    });
+    // Manejo de errores
+    console.error(error);
+    res.status(500).json({ error: 'Error al obtener el usuario' });
   }
 };
 
+// Controlador para iniciar sesión de un usuario
 const iniciarSesion = async (req, res) => {
   try {
-    const { correo, contrasena } = req.body;
+    // Obtener los datos de inicio de sesión del cuerpo de la solicitud
+    const { correo, contraseña } = req.body;
 
-    const usuario = await Usuario.findOne({
-      where: { correo },
-    });
+    // Buscar el usuario por su correo electrónico en la base de datos
+    const usuario = await Usuario.findOne({ correo });
 
+    // Verificar si se encontró un usuario con el correo electrónico proporcionado
     if (!usuario) {
-      return res.status(400).json({
-        message: 'Credenciales incorrectas',
-      });
+      return res.status(404).json({ error: 'Usuario no encontrado' });
     }
 
-    const contrasenaValida = await bcrypt.compare(
-      contrasena,
-      usuario.contrasena
-    );
-
-    if (!contrasenaValida) {
-      return res.status(400).json({
-        message: 'Credenciales incorrectas',
-      });
+    // Verificar si la contraseña es correcta
+    if (usuario.contraseña !== contraseña) {
+      return res.status(401).json({ error: 'Contraseña incorrecta' });
     }
 
-    const token = jwt.sign({ id: usuario.id }, process.env.JWT_SECRET);
-
-    res.status(200).json({
-      usuario,
-      token,
-    });
+    // Enviar la respuesta con el usuario autenticado
+    res.status(200).json({ usuario });
   } catch (error) {
-    console.log(error);
-    res.status(500).json({
-      message: 'Error al iniciar sesión',
-    });
+    // Manejo de errores
+    console.error(error);
+    res.status(500).json({ error: 'Error al iniciar sesión' });
   }
 };
 
@@ -111,5 +100,5 @@ module.exports = {
   crearUsuario,
   obtenerUsuarios,
   obtenerUsuarioPorId,
-  iniciarSesion,
+  iniciarSesion
 };

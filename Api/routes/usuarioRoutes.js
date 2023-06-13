@@ -1,22 +1,17 @@
 const express = require('express');
 const router = express.Router();
-const {
-  crearUsuario,
-  obtenerUsuarios,
-  obtenerUsuarioPorId,
-  iniciarSesion,
-} = require('../controllers/usuariosController');
+const { crearUsuario, obtenerUsuarios, obtenerUsuarioPorId, iniciarSesion } = require('../controllers/usuarioController');
 
 // Endpoint para crear un usuario
-router.post('/usuario', crearUsuario);
+router.post('/', crearUsuario);
 
 // Endpoint para obtener todos los usuarios
-router.get('/usuarios', obtenerUsuarios);
+router.get('/', obtenerUsuarios);
 
 // Endpoint para obtener un usuario por su ID
-router.get('/usuarios/:id', obtenerUsuarioPorId);
+router.get('/:id', obtenerUsuarioPorId);
 
 // Endpoint para iniciar sesión
-router.post('/usuarios/login', iniciarSesion);
+router.post('/login', iniciarSesion);
 
 module.exports = router;
