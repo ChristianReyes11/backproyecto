@@ -1,3 +1,54 @@
+const mongoose = require('mongoose');
+
+const luzSchema = new mongoose.Schema({
+  nombre: {
+    type: String,
+    required: true
+  },
+  estado: {
+    type: String,
+    enum: ['encendida', 'apagada'],
+    default: 'apagada'
+    /** 
+    type: Boolean,
+    required: true,
+    default: false
+    */
+  },
+  brillo: {
+    type: Number,
+    required: true
+  },
+  programar: {
+    type: Date,
+    default: null
+  },
+  color: {
+    type: String,
+    /**
+    validate: {
+      validator: function (value) {
+        // Verificar el formato rgb(r,g,b)
+        return /^rgb\((\d{1,3}),(\d{1,3}),(\d{1,3})\)$/.test(value);
+      },
+      message: 'El formato del color debe ser rgb(r,g,b)'
+    },
+    set: function (value) {
+      // Convertir el valor en el formato correcto
+      if (!value.startsWith('rgb(')) {
+        value = 'rgb(' + value + ')';
+      }
+      return value;
+    }
+     */
+  }
+});
+
+const Luz = mongoose.model('Luz', luzSchema);
+
+module.exports = Luz;
+
+/**
 const { DataTypes } = require('sequelize');
 const { sequelize } = require('../config/db');
 
@@ -39,6 +90,7 @@ const Luz = sequelize.define('Luz', {
 });
 
 module.exports = Luz;
+ */
 
 /**
  * En este modelo se definen las columnas nombre, estado, brillo, programar y color. 

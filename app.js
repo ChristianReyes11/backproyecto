@@ -1,37 +1,41 @@
 const express = require('express');
-const bodyParser = require('body-parser');
-const sequelize = require('./Api/config/db');
-const routesLuces = require('./Api/routes/luzRoutes');
-
+const mongoose = require('mongoose');
 
 const app = express();
+const PORT = 3000;
 
-// Configuración del body-parser
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
+app.use(express.json())
+// Configuración de la conexión a la base de datos
+mongoose.connect('mongodb+srv://chrisreyes:admin@cluster0.an5fnzd.mongodb.net/API_CBIX?retryWrites=true&w=majority', {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+})
+  .then(() => {
+    console.log('Conexión exitosa a la base de datos');
+    // Aquí puedes iniciar tu servidor o realizar otras configuraciones
+    app.listen(PORT, () => {
+      console.log(`Servidor escuchando en el puerto ${PORT}`);
+    });
+    app.get("/", (req, res) => {
+      res.send("**Bienvenido al API de CBIX**");
+    });
+  })
+  .catch((error) => {
+    console.log('Error al conectar a la base de datos:', error);
+  });
 
-/**
- * route homepage
- */
-app.get("/", (req, res) => {
-  res.send("**Bienvenido al API de CBIX**");
-});
+// Configuración de rutas, middleware y otras configuraciones de tu API
+// ...
 
-// Conexión a la base de datos
-// sequelize
-//   .authenticate()
-//   .then(() => {
-//     console.log('Conexión establecida correctamente.');
-//   })
-//   .catch((error) => {
-//     console.log('No se pudo establecer la conexión con la base de datos:', error);
-//   });
+// Rutas de las puertas
+const puertaRoutes = require('./Api/routes/puertaRoutes');
+app.use('/puertas', puertaRoutes);
 
-// Carga de rutas de la API
-app.use('/api', routesLuces);
+const luzRoutes = require('./Api/routes/luzRoutes');
+app.use('/luces', luzRoutes);
 
-// Iniciar servidor
-app.listen(3000, () => {
-  console.log('Servidor corriendo en el puerto 3000.');
-});
+// Otros enrutadores y configuraciones
+// ...
 
+// Manejo de errores y otros middleware
+// ...

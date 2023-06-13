@@ -1,3 +1,4 @@
+/**
 const { Sequelize } = require("sequelize");
 const NODE_ENV = process.env.NODE_ENV;
 
@@ -22,3 +23,4 @@ const dbConnectMySql = async () => {
 
 
 module.exports = {sequelize, dbConnectMySql}
+*/

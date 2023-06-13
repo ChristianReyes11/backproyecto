@@ -1,21 +1,21 @@
 const express = require('express');
 const router = express.Router();
-const luzController = require('../controllers/luzController');
+const {createLuz, deleteLuz, getLuces, getLuzById, updateLuz} = require('../controllers/luzController');
 
 // Ruta para obtener todas las luces
-router.get('/luces', luzController.getLuces);
+router.get('/', getLuces);
 
 // Ruta para obtener una luz por su ID
-router.get('/luces/:id', luzController.getLuzById);
+router.get('/:id', getLuzById);
 
 // Ruta para crear una nueva luz
-router.post('/luces', luzController.createLuz);
+router.post('/', createLuz);
 
 // Ruta para actualizar una luz existente
-router.put('/luces/:id', luzController.updateLuz);
+router.put('/:id', updateLuz);
 
 // Ruta para eliminar una luz existente
-router.delete('/luces/:id', luzController.deleteLuz);
+router.delete('/:id', deleteLuz);
 
 module.exports = router;
 

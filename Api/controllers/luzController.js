@@ -1,3 +1,4 @@
+const Luz = require('../models/luz');
 const db = require('../models/luz');
 
 // Obtener todas las luces
@@ -29,15 +30,11 @@ const getLuzById = async (req, res) => {
 
 // Crear una nueva luz
 const createLuz = async (req, res) => {
-  const { nombre, estado, brillo, programar, color } = req.body;
   try {
-    const luz = await db.Luz.create({
-      nombre,
-      estado,
-      brillo,
-      programar,
-      color,
-    });
+    console.log(req.body)
+    const { nombre, estado, brillo, programar, color } = req.body;
+    const luz = new Luz({nombre, estado, brillo, programar, color})
+    await luz.save();
     res.status(201).json(luz);
   } catch (err) {
     console.log(err);

@@ -1,3 +1,78 @@
+const Puerta = require('../models/puerta');
+
+// Obtener todas las puertas
+exports.getPuertas = async (req, res) => {
+  try {
+    const puertas = await Puerta.find();
+    res.json(puertas);
+  } catch (error) {
+    res.status(500).json({ error: 'Error al obtener las puertas' });
+  }
+};
+
+// Crear una nueva puerta
+exports.createPuerta = async (req, res) => {
+  try {
+    console.log(req.body);
+    const { nombre, estado } = req.body;
+    const puerta = new Puerta({ nombre, estado });
+    await puerta.save();
+    res.status(201).json(puerta);
+  } catch (error) {
+    console.log(error)
+    res.status(500).json({ error: 'Error al crear la puerta' });
+  }
+};
+
+// Obtener una puerta por su ID
+exports.getPuertaById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const puerta = await Puerta.findById(id);
+    if (!puerta) {
+      return res.status(404).json({ error: 'Puerta no encontrada' });
+    }
+    res.json(puerta);
+  } catch (error) {
+    res.status(500).json({ error: 'Error al obtener la puerta' });
+  }
+};
+
+// Actualizar una puerta por su ID
+exports.updatePuerta = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { nombre, estado } = req.body;
+    const puerta = await Puerta.findByIdAndUpdate(
+      id,
+      { nombre, estado },
+      { new: true }
+    );
+    if (!puerta) {
+      return res.status(404).json({ error: 'Puerta no encontrada' });
+    }
+    res.json(puerta);
+  } catch (error) {
+    res.status(500).json({ error: 'Error al actualizar la puerta' });
+  }
+};
+
+// Eliminar una puerta por su ID
+exports.deletePuerta = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const puerta = await Puerta.findByIdAndDelete(id);
+    if (!puerta) {
+      return res.status(404).json({ error: 'Puerta no encontrada' });
+    }
+    res.json({ message: 'Puerta eliminada correctamente' });
+  } catch (error) {
+    res.status(500).json({ error: 'Error al eliminar la puerta' });
+  }
+};
+
+
+/** 
 // Importar el modelo de puerta
 const Puerta = require('../models/puerta');
 
@@ -67,3 +142,4 @@ exports.eliminarPuerta = async (req, res) => {
     res.status(500).json({ mensaje: 'Error al eliminar la puerta' });
   }
 };
+*/
