@@ -47,7 +47,7 @@ exports.cerrarPuerta = async (req, res) => {
     const payload = {
       id: puerta._id,
       nombre: puerta.nombre,
-      estado: true
+      estado: false
     };
 
     mqttClient.subscribe('domotica/puertas/open-close');

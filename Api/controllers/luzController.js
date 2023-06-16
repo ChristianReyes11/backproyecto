@@ -14,7 +14,10 @@ exports.encenderLuz = async (req, res) => {
     const payload = {
       id: luz._id,
       nombre: luz.nombre,
-      estado: true
+      estado: true,
+      brillo: luz.brillo,
+      programar: luz.programar,
+      color: luz.color
     };
 
     mqttClient.subscribe('domotica/luz/on-off');
@@ -47,7 +50,10 @@ exports.apagarLuz = async (req, res) => {
     const payload = {
       id: luz._id,
       nombre: luz.nombre,
-      estado: false
+      estado: true,
+      brillo: luz.brillo,
+      programar: luz.programar,
+      color: luz.color
     };
 
     mqttClient.subscribe('domotica/luz/on-off');
