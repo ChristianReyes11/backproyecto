@@ -8,9 +8,9 @@ const puertaSchema = new mongoose.Schema({
     required: true
   },
   estado: {
-    type: String,
-    enum: ['abierto', 'cerrado'],
-    default: 'cerrado'
+    type: Boolean,
+    required: true,
+    default: false
   },
   createdAt: {
     type: Date,
@@ -25,29 +25,3 @@ const puertaSchema = new mongoose.Schema({
 const Puerta = mongoose.model('Puerta', puertaSchema);
 
 module.exports = Puerta;
-
-
-
-/**
-const { DataTypes } = require('sequelize');
-const sequelize = require('../config/db'); // Asegúrate de que la ruta al archivo de configuración de la base de datos sea correcta
-
-const Puerta = sequelize.define('Puerta', {
-  id: {
-    type: DataTypes.INTEGER,
-    primaryKey: true,
-    autoIncrement: true
-  },
-  nombre: {
-    type: DataTypes.STRING,
-    allowNull: false
-  },
-  estado: {
-    type: DataTypes.BOOLEAN,
-    defaultValue: false
-  },
-  // Otros campos de la entidad puerta
-});
-
-module.exports = Puerta;
- */

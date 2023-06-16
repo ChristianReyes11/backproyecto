@@ -1,6 +1,10 @@
 const express = require('express');
 const router = express.Router();
-const {createPuerta, getPuertaById, deletePuerta, getPuertas, updatePuerta} = require('../controllers/puertaController');
+const {createPuerta, getPuertaById, deletePuerta, getPuertas, updatePuerta, abrirPuerta, cerrarPuerta} = require('../controllers/puertaController');
+
+// Ruta para abrir y cerrar puerta
+router.post('/abrir/:id', abrirPuerta);
+router.post('/cerrar/:id', cerrarPuerta);
 
 // Ruta GET para obtener todas las puertas
 router.get('/', getPuertas);
@@ -18,27 +22,3 @@ router.put('/:id', updatePuerta);
 router.delete('/:id', deletePuerta);
 
 module.exports = router;
-
-
-/**
-const express = require('express');
-const router = express.Router();
-const puertaController = require('../controllers/puertaController');
-
-// Ruta para obtener todas las puertas
-router.get('/puertas', puertaController.obtenerTodasLasPuertas);
-
-// Ruta para crear una nueva puerta
-router.post('/puertas', puertaController.crearPuerta);
-
-// Ruta para obtener una puerta por su ID
-router.get('/puertas/:id', puertaController.obtenerPuertaPorId);
-
-// Ruta para actualizar una puerta
-router.put('/puertas/:id', puertaController.actualizarPuerta);
-
-// Ruta para eliminar una puerta
-router.delete('/puertas/:id', puertaController.eliminarPuerta);
-
-module.exports = router;
- */

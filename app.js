@@ -1,11 +1,14 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const cors = require('cors');
 
 const app = express();
-const PORT = 3000;
-
+const PORT = 3001;
+app.use(cors());
 app.use(express.json())
-// Configuración de la conexión a la base de datos
+// Configuración de la conexión a la base de datos mongodb+srv://chrisreyes:admin@cluster0.an5fnzd.mongodb.net/API_CBIX?retryWrites=true&w=majority
+// Mongo Atlas: mongodb+srv://chrisreyes:admin@cluster0.an5fnzd.mongodb.net/API_CBIX?retryWrites=true&w=majority
+// Mongo Local en Docker: mongodb://localhost:27017/API_CBIX
 mongoose.connect('mongodb+srv://chrisreyes:admin@cluster0.an5fnzd.mongodb.net/API_CBIX?retryWrites=true&w=majority', {
   useNewUrlParser: true,
   useUnifiedTopology: true,
@@ -24,20 +27,12 @@ mongoose.connect('mongodb+srv://chrisreyes:admin@cluster0.an5fnzd.mongodb.net/AP
     console.log('Error al conectar a la base de datos:', error);
   });
 
-// Configuración de rutas, middleware y otras configuraciones de tu API
-// ...
-
-// Rutas de las puertas
+// Rutas de las Puertas
 const puertaRoutes = require('./Api/routes/puertaRoutes');
 app.use('/puertas', puertaRoutes);
-
+// Rutas de las Luces
 const luzRoutes = require('./Api/routes/luzRoutes');
 app.use('/luces', luzRoutes);
-
+// Rutas de los Usuarios
 const usuarioRoutes = require('./Api/routes/usuarioRoutes');
 app.use('/usuarios', usuarioRoutes);
-// Otros enrutadores y configuraciones
-// ...
-
-// Manejo de errores y otros middleware
-// ...

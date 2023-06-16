@@ -1,7 +1,75 @@
 const Luz = require('../models/luz');
+const mqtt = require('mqtt');
+// Configura la conexión al broker MQTT
+const mqttClient = mqtt.connect('ws://192.168.1.81:8083/mqtt'); // Reemplaza 'broker.example.com' con la dirección de tu broker MQTT
+
+// Encender Luz por su ID
+exports.encenderLuz = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const luz = await Luz.findById(id);
+    if (!luz) {
+      return res.status(404).json({ error: 'Luz no encontrada'});
+    }
+    const payload = {
+      id: luz._id,
+      nombre: luz.nombre,
+      estado: true
+    };
+
+    mqttClient.subscribe('domotica/luz/on-off');
+    mqttClient.on('connect', () => {
+      console.log('Conexión exitosa al broker MQTT');
+    });
+    mqttClient.on('message', async (topic, message) => {
+      console.log(`Mensaje recibido en el tema ${topic}: ${message.toString()}`);
+      // Actualizar el estado de la luz a "Encendida" en la BD
+      luz.estado = true;
+      await luz.save();
+    });
+
+    mqttClient.publish('domotica/luz/on-off', JSON.stringify(payload));
+    res.send('Mensaje enviado al broker MQTT');
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Error al obtener la luz' });
+  } 
+};
+
+// Apagar Luz por su ID
+exports.apagarLuz = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const luz = await Luz.findById(id);
+    if (!luz) {
+      return res.status(404).json({ error: 'Luz no encontrada'});
+    }
+    const payload = {
+      id: luz._id,
+      nombre: luz.nombre,
+      estado: false
+    };
+
+    mqttClient.subscribe('domotica/luz/on-off');
+    mqttClient.on('connect', () => {
+      console.log('Conexión exitosa al broker MQTT');
+    });
+    mqttClient.on('message', async (topic, message) => {
+      console.log(`Mensaje recibido en el tema ${topic}: ${message.toString()}`);
+      // Actualuzar el estado de la luz a "Apagada" en la BD
+      luz.estado = false;
+      await luz.save();
+    });
+    mqttClient.publish('domotica/luz/on-off', JSON.stringify(payload));
+    res.send('Mensaje enviado al broker MQTT');
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Error al obtener la luz' });
+  } 
+};  
 
 // Obtener todas las luces
-const getLuces = async (req, res) => {
+exports.getLuces = async (req, res) => {
   try {
     const luces = await Luz.find();
     res.status(200).json({luces});
@@ -12,7 +80,7 @@ const getLuces = async (req, res) => {
 };
 
 // Obtener una luz por su ID
-const getLuzById = async (req, res) => {
+exports.getLuzById = async (req, res) => {
   try {
     const { id } = req.params;
     const luz = await Luz.findById(id);
@@ -27,7 +95,7 @@ const getLuzById = async (req, res) => {
 };
 
 // Crear una nueva luz
-const createLuz = async (req, res) => {
+exports.createLuz = async (req, res) => {
   try {
     console.log(req.body)
     const { nombre, estado, brillo, programar, color } = req.body;
@@ -41,7 +109,7 @@ const createLuz = async (req, res) => {
 };
 
 // Actualizar una luz existente
-const updateLuz = async (req, res) => {
+exports.updateLuz = async (req, res) => {
   try {
     const { id } = req.params;
     const { nombre, estado, brillo, programar, color } = req.body;
@@ -61,24 +129,16 @@ const updateLuz = async (req, res) => {
 };
 
 // Eliminar una luz existente
-const deleteLuz = async (req, res) => {
+exports.deleteLuz = async (req, res) => {
   try {
     const { id } = req.params;
     const luz = await Luz.findByIdAndDelete(id);
     if (!luz) {
       return res.status(404).json({ error: 'Luz no encontrada' });
     } 
-    res.json({ message: 'Puerta eliminada correctamente' });
+    res.json({ message: 'Luz eliminada correctamente' });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Error al eliminar la luz' });
   }
-};
-
-module.exports = {
-  getLuces,
-  getLuzById,
-  createLuz,
-  updateLuz,
-  deleteLuz,
 };

@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { crearUsuario, obtenerUsuarios, obtenerUsuarioPorId, iniciarSesion } = require('../controllers/usuarioController');
+const { crearUsuario, obtenerUsuarios, obtenerUsuarioPorId, iniciarSesion, } = require('../controllers/usuarioController');
 
 // Endpoint para crear un usuario
 router.post('/', crearUsuario);
