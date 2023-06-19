@@ -96,9 +96,25 @@ const iniciarSesion = async (req, res) => {
   }
 };
 
+const deleteUser = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const usuario = await Usuario.findByIdAndDelete(id);
+    if (!usuario) {
+      console.log()
+      return res.status(404).json({ error: 'Usuario no encontrada' });
+    }
+    res.json({ message: 'Usuario eliminado correctamente' });
+  } catch (error) {
+    console.error(error)
+    res.status(500).json({ error: 'Error al eliminar al Usuario' });
+  }
+};
+
 module.exports = {
   crearUsuario,
   obtenerUsuarios,
   obtenerUsuarioPorId,
-  iniciarSesion
+  iniciarSesion,
+  deleteUser
 };

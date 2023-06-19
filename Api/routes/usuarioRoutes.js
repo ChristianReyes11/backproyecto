@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { crearUsuario, obtenerUsuarios, obtenerUsuarioPorId, iniciarSesion, } = require('../controllers/usuarioController');
+const { crearUsuario, obtenerUsuarios, obtenerUsuarioPorId, iniciarSesion, deleteUser} = require('../controllers/usuarioController');
 
 // Endpoint para crear un usuario
 router.post('/', crearUsuario);
@@ -13,5 +13,8 @@ router.get('/:id', obtenerUsuarioPorId);
 
 // Endpoint para iniciar sesión
 router.post('/login', iniciarSesion);
+
+// Endpoint para Eliminar usuario por su ID
+router.delete('/:id', deleteUser);
 
 module.exports = router;
